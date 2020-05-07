@@ -14,6 +14,15 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_tag do
+      transient do
+        tag_count 1
+      end
+      after(:build) do |thing, props|
+        thing.thing_tags << build_list(:thing_tag, props.tag_count, :thing=>thing)
+      end
+    end
+
     trait :with_fields do
       description { Faker::Lorem.paragraphs.join }
       notes       { Faker::Lorem.paragraphs.join }
