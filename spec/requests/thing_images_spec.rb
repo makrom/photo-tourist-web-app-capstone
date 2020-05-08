@@ -10,8 +10,8 @@ RSpec.describe "ThingImages", type: :request do
     context "valid thing and image" do
       let(:thing) { create_resource(things_path, :thing, :created) }
       let(:image) { create_resource(images_path, :image, :created) }
-      let(:thing_image_props) { 
-        FactoryGirl.attributes_for(:thing_image, :image_id=>image["id"]) 
+      let(:thing_image_props) {
+        FactoryGirl.attributes_for(:thing_image, :image_id=>image["id"])
       }
 
       it "can associate image with thing" do
@@ -30,7 +30,7 @@ RSpec.describe "ThingImages", type: :request do
       end
 
       it "must have image" do
-        jpost thing_thing_images_path(thing["id"]), 
+        jpost thing_thing_images_path(thing["id"]),
               thing_image_props.except(:image_id)
         expect(response).to have_http_status(:bad_request)
         payload=parsed_body
@@ -61,7 +61,7 @@ RSpec.describe "ThingImages", type: :request do
   shared_examples "get linkables" do |count, user_roles=[]|
     it "return linkable things" do
       jget image_linkable_things_path(linked_image_ids[0])
-      #pp parsed_body
+      # pp parsed_body
       expect(response).to have_http_status(:ok)
       expect(parsed_body.size).to eq(count)
       if (count > 0)
@@ -83,26 +83,26 @@ RSpec.describe "ThingImages", type: :request do
       expect(parsed_body.size).to eq(linked_image_ids.count+1)
     end
     it "link from Image to Thing" do
-      jpost image_thing_images_path(thing_image_props[:image_id]), 
+      jpost image_thing_images_path(thing_image_props[:image_id]),
                                     thing_image_props.merge(:thing_id=>linked_thing_id)
       expect(response).to have_http_status(:no_content)
       jget thing_thing_images_path(linked_thing_id)
       expect(parsed_body.size).to eq(linked_image_ids.count+1)
     end
     it "bad request when link to unknown Image" do
-      jpost thing_thing_images_path(linked_thing_id), 
+      jpost thing_thing_images_path(linked_thing_id),
                                     thing_image_props.merge(:image_id=>99999)
       expect(response).to have_http_status(:bad_request)
     end
     it "bad request when link to unknown Thing" do
-      jpost image_thing_images_path(thing_image_props[:image_id]), 
+      jpost image_thing_images_path(thing_image_props[:image_id]),
                                     thing_image_props.merge(:thing_id=>99999)
       expect(response).to have_http_status(:bad_request)
     end
   end
   shared_examples "can update link" do
     it do
-      jput thing_thing_image_path(thing_image["thing_id"], thing_image["id"]), 
+      jput thing_thing_image_path(thing_image["thing_id"], thing_image["id"]),
                              thing_image.merge("priority"=>0)
       expect(response).to have_http_status(:no_content)
     end
@@ -121,7 +121,7 @@ RSpec.describe "ThingImages", type: :request do
   end
   shared_examples "cannot update link" do |status|
     it do
-      jput thing_thing_image_path(thing_image["thing_id"], thing_image["id"]), 
+      jput thing_thing_image_path(thing_image["thing_id"], thing_image["id"]),
                              thing_image.merge("priority"=>0)
       expect(response).to have_http_status(status)
     end
@@ -179,7 +179,7 @@ RSpec.describe "ThingImages", type: :request do
     end
     context "user is member" do
       before(:each) do
-        login apply_member(account, things) 
+        login apply_member(account, things)
       end
       it_should_behave_like "can get links"
       it_should_behave_like "get linkables", 2, [Role::MEMBER]

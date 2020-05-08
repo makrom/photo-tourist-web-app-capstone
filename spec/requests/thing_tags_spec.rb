@@ -52,7 +52,7 @@ RSpec.describe "ThingTags", type: :request do
       expect(parsed_body[0]).to_not include("thing_name")
     end
     it "can get links for Tag" do
-      jget image_thing_tags_path(linked_tag_id)
+      jget tag_thing_tags_path(linked_tag_id)
       #pp parsed_body
       expect(response).to have_http_status(:ok)
       expect(parsed_body.size).to eq(1)
@@ -63,7 +63,8 @@ RSpec.describe "ThingTags", type: :request do
   shared_examples "get linkables" do |count, user_roles=[]|
     it "return linkable things" do
       jget tag_linkable_things_path(linked_tag_ids[0])
-      #pp parsed_body
+      # pp parsed_body
+      # byebug
       expect(response).to have_http_status(:ok)
       expect(parsed_body.size).to eq(count)
       if (count > 0)
