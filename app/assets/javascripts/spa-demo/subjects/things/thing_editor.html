@@ -5,8 +5,8 @@
   <div class="thing-name row col-lg-12">
     <label class="col-xs-3">Name:</label>
     <input class="col-xs-9"
-           name="thing-name" 
-           data-ng-model="$ctrl.item.name" 
+           name="thing-name"
+           data-ng-model="$ctrl.item.name"
            ng-readonly="!$ctrl.authz.canUpdate"
            required="required"
            maxlength="40"
@@ -18,8 +18,8 @@
        ng-show="thingform.$valid">
     <label class="col-xs-3">Description:</label>
     <textarea class="col-xs-9"
-           name="thing-desc" 
-           ng-model="$ctrl.item.description" 
+           name="thing-desc"
+           ng-model="$ctrl.item.description"
            ng-readonly="!$ctrl.authz.canUpdate"
            type="text"
            size="80"
@@ -31,8 +31,8 @@
        ng-show="$ctrl.authz.canGetDetails && thingform.$valid">
     <label class="col-xs-3">Notes:</label>
     <textarea class="col-xs-9"
-           name="thing-notes" 
-           ng-model="$ctrl.item.notes" 
+           name="thing-notes"
+           ng-model="$ctrl.item.notes"
            ng-readonly="!$ctrl.authz.canUpdate"
            type="text"
            size="80"
@@ -44,7 +44,7 @@
     <label class="col-xs-3">Related Images:</label>
     <ul class="thing-images col-xs-9">
       <li ng-repeat="ti in $ctrl.images | orderBy:'priority'">
-        <input type="checkbox"               
+        <input type="checkbox"
                name="image-delete"
                ng-model="ti.toRemove"
                ng-show="$ctrl.authz.canRemoveImage"
@@ -60,7 +60,7 @@
         <div class="glyphicon glyphicon-asterisk"
              ng-hide="ti.originalPriority==ti.priority || ti.toRemove"></div>
         <a data-ui-sref="images({id:ti.image_id})">
-          <img style="width: 50px"            
+          <img style="width: 50px"
              ng-src="{{ti.image_content_url}}?width=50"/>
           <span class="id image_id">{{ti.image_id}}</span>
           <label class="image-caption"
@@ -71,6 +71,33 @@
       </li>
     </ul>
     <span class="invalid">{{$ctrl.item.errors.images}}</span>
+  </div>
+
+  <div class="thing-tags row col-lg-12">
+    <label class="col-xs-3">Related Tags:</label>
+    <ul class="thing-tags col-xs-9">
+      <li ng-repeat="tt in $ctrl.tags">
+        <input type="checkbox"
+               name="tag-delete"
+               ng-model="tt.toRemove"
+               ng-show="$ctrl.authz.canRemoveTag"
+               value="{{tt.id}}">
+        <div class="tag-delete glyphicon glyphicon-remove"
+             ng-show="tt.toRemove"></div>
+        <div class="glyphicon glyphicon-asterisk"
+             ng-hide="tt.toRemove"></div>
+        <a data-ui-sref="tags({id:tt.tag_id})">
+          <img style="width: 50px"
+             ng-src="{{tt.tag_content_url}}?width=50"/>
+          <span class="id tag_id">{{tt.tag_id}}</span>
+          <label class="tag-name"
+                 ng-show="tt.tag_name">{{tt.tag_name}}</label>
+          <label class="tag-name"
+                 ng-hide="tt.tag_name">(no name {{tt.tag_id}})</label>
+        </a>
+      </li>
+    </ul>
+    <span class="invalid">{{$ctrl.item.errors.tags}}</span>
   </div>
 
   <div class="thing-controls"
@@ -85,27 +112,36 @@
       <span class="thing-modify"
             data-ng-hide="!$ctrl.authz.canUpdate &&
                           !$ctrl.authz.canUpdateImage &&
-                          !$ctrl.authz.canRemoveImage">
+                          !$ctrl.authz.canRemoveImage &&
+                          !$ctrl.authz.canUpdateTag &&
+                          !$ctrl.authz.canRemoveTag">
         <button name="thing-update"
-                type="submit"          
+                type="submit"
                 ng-disabled="thingform.$invalid || !thingform.$dirty"
                 data-ng-hide="$ctrl.haveDirtyLinks() &&
-                  (!thingform['thing-name'].$dirty && 
-                   !thingform['thing-desc'].$dirty && 
+                  (!thingform['thing-name'].$dirty &&
+                   !thingform['thing-desc'].$dirty &&
                    !thingform['thing-notes'].$dirty)"
                 ng-click="$ctrl.update()">Update Thing</button>
         <button name="thing-images-update"
-                type="submit"          
+                type="submit"
                 data-ng-show="$ctrl.haveDirtyLinks() &&
-                  (!thingform['thing-name'].$dirty && 
-                   !thingform['thing-desc'].$dirty && 
+                  (!thingform['thing-name'].$dirty &&
+                   !thingform['thing-desc'].$dirty &&
                    !thingform['thing-notes'].$dirty)"
-                ng-click="$ctrl.updateImageLinks()">Update Image Links</button>        
+                ng-click="$ctrl.updateImageLinks()">Update Image Links</button>
+        <button name="thing-tags-update"
+                type="submit"
+                data-ng-show="$ctrl.haveDirtyLinks() &&
+                  (!thingform['thing-name'].$dirty &&
+                   !thingform['thing-desc'].$dirty &&
+                   !thingform['thing-notes'].$dirty)"
+                ng-click="$ctrl.updateTagLinks()">Update Tag Links</button>
       </span>
 
       <button name="thing-delete"
               type="submit"
-              ng-show="$ctrl.authz.canDelete" 
+              ng-show="$ctrl.authz.canDelete"
               ng-click="$ctrl.remove()">Delete Thing</button>
       <button name="image-clear"
               type="submit"
