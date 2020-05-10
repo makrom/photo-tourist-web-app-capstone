@@ -54,9 +54,11 @@ RSpec.feature "AuthzThingTags", type: :feature, :js=>true do
           end
         end
         #make sure all updates received from server before quitting
-        image_editor_loaded! linked_tag
+        tag_editor_loaded! linked_tag
       end
       it "can navigate from tag to thing" do
+        pp linked_thing
+        byebug
         expect(page).to have_css("sd-tag-editor")
         link_selector_args=["sd-tag-editor ul.tag-things span.thing_id",
                             {:text=>linked_thing.id, :visible=>false, :wait=>5}]
@@ -103,7 +105,7 @@ RSpec.feature "AuthzThingTags", type: :feature, :js=>true do
         expect(page).to have_no_css("sd-thing-editor")
 
         #wait for page navigated to arrive, displaying expected
-        image_editor_loaded! linked_tag
+        tag_editor_loaded! linked_tag
       end
     end
   end
@@ -125,7 +127,7 @@ RSpec.feature "AuthzThingTags", type: :feature, :js=>true do
         expect(page).to have_no_css(".link-things select option[value='#{linked_thing.id}']")
       end
       #make sure page finishes loading before ending test
-      image_editor_loaded! linked_tag, linkables.size
+      tag_editor_loaded! linked_tag, linkables.size
     end
 
     it "can create link tag to things" do
@@ -170,7 +172,7 @@ RSpec.feature "AuthzThingTags", type: :feature, :js=>true do
                                  :text=>things[1].id, :visible=>false, :wait=>5)
       end
       #try to wait for all requests to server to complete before exiting
-      image_editor_loaded! linked_tag, linkables.size-1
+      tag_editor_loaded! linked_tag, linkables.size-1
     end
 
     it "removes link button when no linkables" do

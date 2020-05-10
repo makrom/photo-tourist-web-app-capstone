@@ -45,7 +45,7 @@ RSpec.feature "AuthzTags", type: :feature, js:true do
     it "creates tag" do
       within("sd-tag-editor .tag-form") do
         expect(page).to have_button("Create Tag",:wait=>5)
-        expect(page).to have_field("tag-caption",:readonly=>false)
+        expect(page).to have_field("tag-name",:readonly=>false)
         fill_in("tag-name", :with=>tag_props[:name])
         expect(page).to have_field("tag-name",:with=>tag_props[:name])
         click_button("Create Tag",:disabled=>false,:wait=>5)

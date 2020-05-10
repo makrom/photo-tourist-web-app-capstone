@@ -39,7 +39,7 @@
                                    "spa-demo.subjects.ThingImage",
                                    "spa-demo.subjects.ThingTag"];
   function ThingEditorController($scope, $q, $state, $stateParams,
-                                 Authz, Thing, ThingTag) {
+                                 Authz, Thing, ThingImage, ThingTag) {
     var vm=this;
     vm.create = create;
     vm.clear  = clear;

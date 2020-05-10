@@ -91,6 +91,8 @@ module SubjectsUiHelper
   end
 
   def thing_editor_loaded! thing
+    pp thing
+    byebug
     expect(page).to have_css("sd-thing-editor")
     within("sd-thing-editor .thing-form") do
       expect(page).to have_css("span.thing_id",:text=>thing.id,
