@@ -15,8 +15,13 @@ module SubjectsUiHelper
     end
   end
 
-  def get_linkables link_item #image  # it seems to be one for two: images and tags
-    things=ThingPolicy::Scope.new(current_user, Thing.not_linked(link_item)).user_roles(true,false)
+  def get_linkables_images image
+    things=ThingPolicy::Scope.new(current_user, Thing.not_linked(image)).user_roles(true,false)
+    things=ThingPolicy.merge(things)
+  end
+
+  def get_linkables_tags tag
+    things=ThingPolicy::Scope.new(current_user, Thing.not_linked_tags(tag)).user_roles(true,false)
     things=ThingPolicy.merge(things)
   end
 
@@ -29,7 +34,7 @@ module SubjectsUiHelper
                               :count=>ThingImage.where(:image=>image).count,
                               :wait=>5)
     end
-    expected_linkables ||= get_linkables(image).size
+    expected_linkables ||= get_linkables_images(image).size
     if expected_linkables && logged_in?
       expect(page).to have_css(".link-things select option", :count=>expected_linkables)
     end
@@ -44,7 +49,7 @@ module SubjectsUiHelper
                               :count=>ThingTag.where(:tag=>tag).count,
                               :wait=>5)
     end
-    expected_linkables ||= get_linkables(tag).size
+    expected_linkables ||= get_linkables_images(tag).size
     if expected_linkables && logged_in?
       expect(page).to have_css(".link-things select option", :count=>expected_linkables)
     end
@@ -91,8 +96,6 @@ module SubjectsUiHelper
   end
 
   def thing_editor_loaded! thing
-    pp thing
-    byebug
     expect(page).to have_css("sd-thing-editor")
     within("sd-thing-editor .thing-form") do
       expect(page).to have_css("span.thing_id",:text=>thing.id,

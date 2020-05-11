@@ -13,16 +13,16 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
   let(:authenticated) { create_user }
   let(:thing_props)   { FactoryGirl.attributes_for(:thing) }
   let(:things)        { FactoryGirl.create_list(:thing, 3) }
-  let(:things)        { FactoryGirl.create_list(:thing, 3, 
-                                                :with_roles, 
+  let(:things)        { FactoryGirl.create_list(:thing, 3,
+                                                :with_roles,
                                                 :originator_id=>originator[:id],
                                                 :member_id=>member[:id]) }
-  let(:alt_things)    { FactoryGirl.create_list(:thing, 1, 
-                                                :with_roles, 
+  let(:alt_things)    { FactoryGirl.create_list(:thing, 1,
+                                                :with_roles,
                                                 :originator_id=>originator[:id],
                                                 :member_id=>alt_member[:id]) }
-  let(:images) { FactoryGirl.create_list(:image, 3, 
-                                         :with_roles, 
+  let(:images) { FactoryGirl.create_list(:image, 3,
+                                         :with_roles,
                                          :creator_id=>authenticated[:id]) }
   let(:linked_thing)  { things[0] }
   let(:linked_image)  { images[0] }
@@ -34,13 +34,13 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
 
   before(:each) do
     #touch these before we start
-    thing_image   
+    thing_image
     alt_things
     visit ui_path
   end
 
   shared_examples "can get links" do
-    context "from images" do 
+    context "from images" do
       before(:each) { visit_image linked_image }
       it "can view linked things for image" do
         within("sd-image-editor") do
@@ -48,8 +48,8 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
           within("div.image-things") do
             expect(page).to have_css("label", :text=>"Related Things")
             expect(page).to have_css("li a", :text=>linked_thing.name)
-            expect(page).to have_css("li span.thing_id", 
-                                     :text=>linked_thing.id, 
+            expect(page).to have_css("li span.thing_id",
+                                     :text=>linked_thing.id,
                                      :visible=>false)
             expect(page).to have_no_css("li span.thing_id") #should be hidden
           end
@@ -80,11 +80,11 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
       it "can view linked images for thing" do
         expect(page).to have_css("sd-thing-editor")
         within("sd-thing-editor .thing-form ul.thing-images",:wait=>5) do
-          expect(page).to have_css("li span.image_id", 
-                                   :text=>linked_image.id, 
+          expect(page).to have_css("li span.image_id",
+                                   :text=>linked_image.id,
                                    :visible=>false,
                                    :wait=>5)
-          expect(page).to have_css("li label.image-caption", 
+          expect(page).to have_css("li label.image-caption",
                                    :text=>linked_image.caption)
           #no link should show that it has been modified
           expect(page).to have_no_css("li div.glyphicon-asterisk")
@@ -114,7 +114,7 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
     before(:each) { visit_image linked_image }
 
     it "can get linkable things for image" do
-      linkables=get_linkables(linked_image)
+      linkables=get_linkables_images(linked_image)
       # verify page contains option to select unlinked things
       within("sd-image-editor .image-form .linkable-things") do
         expect(page).to have_css(".link-things select option", :count=>linkables.size, :wait=>5)
@@ -144,13 +144,13 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
         #was added to linked things
         expect(page).to have_css("ul.image-things li a", :text=>linked_thing.name)
         expect(page).to have_css("ul.image-things li a", :text=>things[1].name)
-        expect(page).to have_css("ul.image-things li span.thing_id", 
+        expect(page).to have_css("ul.image-things li span.thing_id",
                                  :text=>things[1].id, :visible=>false)
       end
     end
 
     it "removes thing from linkables when linked" do
-      linkables=get_linkables(linked_image)
+      linkables=get_linkables_images(linked_image)
       within("sd-image-editor .image-form") do
         expect(page).to have_css(".link-things select option", :count=>linkables.size, :wait=>5)
         #select one of the linkables and link to image
@@ -167,7 +167,7 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
         expect(page).to have_no_css(".link-things select option", :text=>things[1].name)
 
         #wait for async server updated to complete
-        expect(page).to have_css("ul.image-things li span.thing_id", 
+        expect(page).to have_css("ul.image-things li span.thing_id",
                                  :text=>things[1].id, :visible=>false, :wait=>5)
       end
       #try to wait for all requests to server to complete before exiting
@@ -175,7 +175,7 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
     end
 
     it "removes link button when no linkables" do
-      linkables=get_linkables(linked_image)
+      linkables=get_linkables_images(linked_image)
       within("sd-image-editor .image-form") do
         #wait for the list to be displayed
         expect(page).to have_css(".link-things select option", :count=>linkables.size, :wait=>5)
@@ -190,7 +190,7 @@ RSpec.feature "AuthzThingImages", type: :feature, :js=>true do
         expect(page).to have_button(button,:disabled=>true,:wait=>5)
 
         #wait for page to update
-        expect(page).to have_css("ul.image-things li span.thing_id", 
+        expect(page).to have_css("ul.image-things li span.thing_id",
                                  :text=>things[1].id, :visible=>false, :wait=>5)
       end
     end
