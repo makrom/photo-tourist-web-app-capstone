@@ -7,7 +7,7 @@
 
   TagLinkableThing.$inject = ["$resource", "spa-demo.config.APP_CONFIG"];
   function TagLinkableThing($resource, APP_CONFIG) {
-    return $resource(APP_CONFIG.server_url + "/api/tags/:itag_id/linkable_things");
+    return $resource(APP_CONFIG.server_url + "/api/tags/:tag_id/linkable_things");
   }
 
 })();

@@ -82,13 +82,14 @@
             ti.originalPriority = ti.priority;
           });
         });
-      vm.tags.$promise.then(
-        function(){
-          angular.forEach(vm.tags, function(ti){
-            ti.originalPriority = ti.priority;
-          });
-        });
-      $q.all([vm.item.$promise,vm.images.$promise,vm.tags.$promise]).catch(handleError);
+      // vm.tags.$promise.then(
+      //   function(){
+      //     angular.forEach(vm.tags, function(ti){
+      //       ti.originalPriority = ti.priority;
+      //     });
+      //   });
+      // $q.all([vm.item.$promise,vm.images.$promise,vm.tags.$promise]).catch(handleError);
+      $q.all([vm.item.$promise,vm.images.$promise]).catch(handleError);
     }
     function haveDirtyLinks() {
       for (var i=0; vm.images && i<vm.images.length; i++) {

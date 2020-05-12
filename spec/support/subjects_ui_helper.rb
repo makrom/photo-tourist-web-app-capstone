@@ -49,9 +49,16 @@ module SubjectsUiHelper
                               :count=>ThingTag.where(:tag=>tag).count,
                               :wait=>5)
     end
-    expected_linkables ||= get_linkables_images(tag).size
+    expected_linkables ||= get_linkables_tags(tag).size
     if expected_linkables && logged_in?
+      # pp expected_linkables
+      # pp get_linkables_tags(tag)
+      # save_and_open_screenshot
+      # binding.pry
       expect(page).to have_css(".link-things select option", :count=>expected_linkables)
+      # expect(page).to have_css(".link-things select option", :count=>expected_linkables)
+      # save_and_open_screenshot
+      # binding.pry
     end
   end
 

@@ -32,8 +32,8 @@ Capybara.register_driver :selenium do |app|
     puts "Capybara.app_host=#{Capybara.app_host}"
     Capybara.server_host = "0.0.0.0"
     Capybara.server_port = ENV['APP_PORT']
-    Capybara::Selenium::Driver.new( app, 
-        :browser=>:remote, 
+    Capybara::Selenium::Driver.new( app,
+        :browser=>:remote,
         :url=>"http://#{ENV['SELENIUM_REMOTE_HOST']}:4444/wd/hub",
         :desired_capabilities=>:chrome)
   elsif browser == :chrome
@@ -42,7 +42,7 @@ Capybara.register_driver :selenium do |app|
       Selenium::WebDriver::Chrome.driver_path=ENV['CHROMEDRIVER_BINARY_PATH']
     end
     Capybara::Selenium::Driver.new(app, :browser => :chrome)
-  else 
+  else
     if ENV['FIREFOX_BINARY_PATH']
       require 'selenium/webdriver'
       #set FIREFOX_BINARY_PATH=c:\Program Files\Mozilla Firefox\firefox.exe
@@ -53,13 +53,18 @@ Capybara.register_driver :selenium do |app|
 end
 
 require 'capybara/poltergeist'
-# Set the default driver 
+# Set the default driver
 Capybara.configure do |config|
   config.default_driver = :rack_test
   #used when :js=>true
   config.javascript_driver = :poltergeist
 end
-#Capybara.javascript_driver = :selenium
+# Capybara.javascript_driver = :selenium
+# Capybara.configure do |config|
+#   config.default_max_wait_time = 10 # seconds
+#   config.default_driver        = :selenium
+# end
+# Capybara.javascript_driver = :selenium
 
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new( app,
